@@ -1,3 +1,6 @@
 11:47 PM 4/6/2025
 This is project 2 which will simulate a bank environemnt. There are three tellers and the bank opens when all are ready. This will simulate how an actual bank environemnt will be.
 From my initial understanding, I can see that this project will consist of a single file but with multiple threads at work to represent each teller and the customer. The output should then consist of detailing a log of the interactions and such. For this project, I plan to use python3 and make sure my script also works on the cs1 servers in python3. I am still rather confused about this project but I feel it is to implement deadlock prevention along with mainly talk about concurrecy, or have multiple processes work at the same time but not necessarily at the same time, so like a bank for example. This initial commit just details my thoughts so far. I will start working on adding some initial methods and such to my project and such.
+
+12:37 AM 4/7/2025
+This session I did not do much but really understand what the project was about so I feel like I have a good starting point. Next session, I look to really start writing out the logic by expanding the given example file to really add in additional teller and customer threads and utilize semaphores to facilitate communication between them.

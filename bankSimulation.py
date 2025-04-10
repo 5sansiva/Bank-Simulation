@@ -2,42 +2,39 @@
 
 import threading
 import random
+import time
+from queue import Queue
 
-wait = [None, threading.Semaphore(1), threading.Semaphore(0)]
+teller_semaphore = threading.Semaphore(2)
 
-gameOver = False
-value = 0
-maxVal = random.randint(7,20)
 
-print("Max Val: ", end='')
-print(maxVal)
+waiting_customers = Queue()
 
-def player(i):
-    global value
-    global gameOver
-    while value < maxVal:
-      wait[i].acquire()
-      if gameOver:
-          return
-      if value == 0:
-          value += 1
-      elif 2*value > maxVal:
-          value += 1
-      else:
-          value *= 2
-      print("Player ", end='')
-      print(i, end='')
-      print(": ", end='')
-      print(value)
-      if value >= maxVal:
-          gameOver = True
-      wait[i%2+1].release() 
+def customer_behavior(customer_id, customer_sem):
+    print(f"Customer {customer_id} arrives and waits.")
+    waiting_customers.put((customer_id, customer_sem))
+    customer_sem.acquire()  # Wait to be called by a teller
+    print(f"Customer {customer_id} is being served.")
+    time.sleep(random.uniform(1, 3))  # Simulate time with the teller
+    print(f"Customer {customer_id} is done and leaves.")
 
-t1 = threading.Thread(target=player, args=(1,))
-t2 = threading.Thread(target=player, args=(2,))
+def teller_behavior(teller_id):
+    while True:
+        teller_semaphore.acquire()  # Wait until a teller is free
+        customer_id, customer_sem = waiting_customers.get()  # Serve the next customer
+        print(f"Teller {teller_id} is serving Customer {customer_id}.")
+        customer_sem.release()  # Let the customer proceed
+        time.sleep(random.uniform(1, 2))  # Simulate teller processing time
+        print(f"Teller {teller_id} finished with Customer {customer_id}.")
+        teller_semaphore.release()
 
-t1.start()
-t2.start()
 
-t1.join()
-t2.join()
+# Start tellers
+for i in range(2):
+    threading.Thread(target=teller_behavior, args=(i,), daemon=True).start()
+
+# Start customers
+for i in range(10):
+    cust_sem = threading.Semaphore(0)
+    threading.Thread(target=customer_behavior, args=(i, cust_sem)).start()
+    time.sleep(random.uniform(0.1, 0.5))  # Stagger customer arrivals

@@ -4,3 +4,7 @@ From my initial understanding, I can see that this project will consist of a sin
 
 12:37 AM 4/7/2025
 This session I did not do much but really understand what the project was about so I feel like I have a good starting point. Next session, I look to really start writing out the logic by expanding the given example file to really add in additional teller and customer threads and utilize semaphores to facilitate communication between them.
+
+5:27 PM 4/10/2025
+So far, I understand that this project one requires one file which stores the customer and teller threads along with using semaphores to control which customer would get access and such so that is what the project mainly consists of.
+This session I plan to setup the overall program when it comes to flow and just start by setting up the customer and teller threads and just set the project up. So I will look at the example code and then look to adjust that and understand where semaphores come into the overall project and how it works with the threads.

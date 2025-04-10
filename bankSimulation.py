@@ -5,8 +5,8 @@ import random
 import time
 from queue import Queue
 
-teller_semaphore = threading.Semaphore(2)
-
+teller_semaphore = threading.Semaphore(3)
+teller_ready_barrier = threading.Barrier(3)
 
 waiting_customers = Queue()
 
@@ -19,6 +19,11 @@ def customer_behavior(customer_id, customer_sem):
     print(f"Customer {customer_id} is done and leaves.")
 
 def teller_behavior(teller_id):
+    print(f"Teller {teller_id} []: ready to serve")
+    print(f"Teller {teller_id} []: waiting for a customer")
+
+    teller_ready_barrier.wait()
+
     while True:
         teller_semaphore.acquire()  # Wait until a teller is free
         customer_id, customer_sem = waiting_customers.get()  # Serve the next customer
@@ -30,8 +35,10 @@ def teller_behavior(teller_id):
 
 
 # Start tellers
-for i in range(2):
+for i in range(3):
     threading.Thread(target=teller_behavior, args=(i,), daemon=True).start()
+
+teller_ready_barrier.wait()
 
 # Start customers
 for i in range(10):

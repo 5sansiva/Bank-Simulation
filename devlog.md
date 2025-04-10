@@ -8,3 +8,6 @@ This session I did not do much but really understand what the project was about 
 5:27 PM 4/10/2025
 So far, I understand that this project one requires one file which stores the customer and teller threads along with using semaphores to control which customer would get access and such so that is what the project mainly consists of.
 This session I plan to setup the overall program when it comes to flow and just start by setting up the customer and teller threads and just set the project up. So I will look at the example code and then look to adjust that and understand where semaphores come into the overall project and how it works with the threads.
+
+6:31 PM 4/10/2025
+During my session, I wrote down the inital program which initializes three teller threads and 10 customer threads and adjusted the output. I am mainly focusing on figuring out how the semaphores work with the threading module and figuring out the flow. I did not encounter any major problems during this session so it fine overall. I accomplished my goal of getting an initial understanding of the flow using threads and sempahores, now I need to add the additional features that were required on the project. Next session, I plan to add those features.

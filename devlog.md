@@ -14,3 +14,6 @@ During my session, I wrote down the inital program which initializes three telle
 
 11:01 PM 4/11/2025
 So far, I made an initial flow where there are three teller threads and ten customer threads just for a demo right now. This work session, I am going to focus on adding more functionality that fits the requirements on the pdf and see how much I can get done.
+
+12:34 AM 4/12/2025
+This past working session, I mainly focused on adjusting my code to have two classes, one for the customers and another for the tellers. This is because each one stores states so having them as classes instead of methods is easier. I didn't really encounter many problems this working session. Next session, I plan on going through the pdf more and seeing what else I need to add and just work through the project like normal.

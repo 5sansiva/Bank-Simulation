@@ -11,3 +11,6 @@ This session I plan to setup the overall program when it comes to flow and just 
 
 6:31 PM 4/10/2025
 During my session, I wrote down the inital program which initializes three teller threads and 10 customer threads and adjusted the output. I am mainly focusing on figuring out how the semaphores work with the threading module and figuring out the flow. I did not encounter any major problems during this session so it fine overall. I accomplished my goal of getting an initial understanding of the flow using threads and sempahores, now I need to add the additional features that were required on the project. Next session, I plan to add those features.
+
+11:01 PM 4/11/2025
+So far, I made an initial flow where there are three teller threads and ten customer threads just for a demo right now. This work session, I am going to focus on adding more functionality that fits the requirements on the pdf and see how much I can get done.

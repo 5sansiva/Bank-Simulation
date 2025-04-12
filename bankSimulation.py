@@ -11,67 +11,101 @@ teller_ready_barrier = threading.Barrier(3)
 waiting_customers = Queue()
 
 class Teller(threading.Thread):
-    def __init__(self, teller_id, safe_sem, manager_sem, customer_queue):
+    def __init__(self, id, safe, manager, customerQueue):
         super().__init__()
-        self.teller_id = teller_id
-        self.safe_sem = safe_sem
-        self.manager_sem = manager_sem
-        self.customer_queue = customer_queue
+        self.id = id
+        self.safe = safe
+        self.manager = manager
+        self.customerQueue = customerQueue
 
     def run(self):
-        print(f"Teller {self.teller_id} [Teller {self.teller_id}]: ready to serve")
-        teller_ready_barrier.wait()
+        print(f"Teller {self.id} []: ready to serve")
+
         while True:
-            customer = self.customer_queue.get()
+            print(f"Teller {self.id} []: waiting for a customer")
+            customer = self.customerQueue.get()
             if customer is None:
-                print(f"Teller {self.teller_id} [Teller {self.teller_id}]: received shutdown signal.")
+
+                print(f"Teller {self.id} []: leaving for the day")
                 break
 
-            print(f"Teller {self.teller_id} [Teller {self.teller_id}]: is serving Customer {customer.customer_id}")
-            customer.start_service(self)
+            customer.selects_teller(self)
 
-            if customer.transaction == "Withdraw":
-                print(f"Teller {self.teller_id} [Teller {self.teller_id}]: requesting manager permission")
-                with self.manager_sem:
-                    print(f"Teller {self.teller_id} [Teller {self.teller_id}]: interacting with manager")
-                    time.sleep(random.uniform(0.005, 0.03))
-                    print(f"Teller {self.teller_id} [Teller {self.teller_id}]: done with manager")
+            print(f"Teller {self.id} [Customer {customer.id}]: serving a customer")
+            print(f"Teller {self.id} [Customer {customer.id}]: asks for transaction")
+            transaction_type = customer.give_transaction(self)
 
-            print(f"Teller {self.teller_id} [Teller {self.teller_id}]: going to safe")
-            with self.safe_sem:
-                print(f"Teller {self.teller_id} [Teller {self.teller_id}]: in the safe")
-                time.sleep(random.uniform(0.01, 0.05))
-                print(f"Teller {self.teller_id} [Teller {self.teller_id}]: leaving the safe")
+            print(f"Teller {self.id} [Customer {customer.id}]: handling {transaction_type.lower()} transaction")
 
-            print(f"Teller {self.teller_id} [Teller {self.teller_id}]: done with Customer {customer.customer_id}")
-            customer.end_service()
+            if transaction_type == "Withdrawal":
+                print(f"Teller {self.id} [Customer {customer.id}]: going to the manager")
+                self.manager.acquire()
+                print(f"Teller {self.id} [Customer {customer.id}]: getting manager's permission")
+                time.sleep(random.uniform(0.005, 0.030))
+                print(f"Teller {self.id} [Customer {customer.id}]: got manager's permission")
+                self.manager.release()
 
+            print(f"Teller {self.id} [Customer {customer.id}]: going to safe")
+            self.safe.acquire()
+            print(f"Teller {self.id} [Customer {customer.id}]: enter safe")
+            time.sleep(random.uniform(0.010, 0.050))
+            print(f"Teller {self.id} [Customer {customer.id}]: leaving safe")
+            print(f"Teller {self.id} [Customer {customer.id}]: finishes {transaction_type.lower()} transaction.")
+            self.safe.release()
+
+            print(f"Teller {self.id} [Customer {customer.id}]: wait for customer to leave.")
+            customer.finish_interaction(self)
 
 class Customer(threading.Thread):
-    def __init__(self, customer_id, entry_sem, customer_queue):
+    def __init__(self, id, entry_semaphore, customerQueue):
         super().__init__()
-        self.customer_id = customer_id
-        self.entry_sem = entry_sem
-        self.customer_queue = customer_queue
-        self.transaction = random.choice(["Deposit", "Withdraw"])
-        self.service_done = threading.Event()
+        self.id = id
+        self.entry_semaphore = entry_semaphore
+        self.customerQueue = customerQueue
+        self.transaction_type = random.choice(["Deposit", "Withdrawal"])
+        self.teller = None
+        self.teller_ready = threading.Event()
+        self.transaction_done = threading.Event()
 
     def run(self):
-        time.sleep(random.uniform(0, 0.1))  # wait 0–100 ms
-        with self.entry_sem:
-            print(f"Customer {self.customer_id} [Customer {self.customer_id}]: enters bank to {self.transaction}")
-            self.customer_queue.put(self)
-            self.service_done.wait()
-            print(f"Customer {self.customer_id} [Customer {self.customer_id}]: transaction complete, exiting")
+        print(f"Customer {self.id} []: wants to perform a {self.transaction_type.lower()} transaction")
+        time.sleep(random.uniform(0, 0.1))  
 
-    def start_service(self, teller):
-        print(f"Customer {self.customer_id} [Customer {self.customer_id}]: starts with Teller {teller.teller_id}")
+        print(f"Customer {self.id} []: going to bank.")
+        with self.entry_semaphore:  
+            print(f"Customer {self.id} []: entering bank.")
+            print(f"Customer {self.id} []: getting in line.")
+            self.customerQueue.put(self)
+            self.teller_ready.wait()  
 
-    def end_service(self):
-        self.service_done.set()
+            print(f"Customer {self.id} [Teller {self.teller.id}]: selects teller")
+            print(f"Customer {self.id} [Teller {self.teller.id}] introduces itself")
+
+
+            self.transaction_ready.wait()
+            print(f"Customer {self.id} [Teller {self.teller.id}]: asks for {self.transaction_type.lower()} transaction")
+
+            self.transaction_done.wait()
+            print(f"Customer {self.id} [Teller {self.teller.id}]: leaves teller")
+            print(f"Customer {self.id} []: goes to door")
+            print(f"Customer {self.id} []: leaves the bank")
+
+
+    def selects_teller(self, teller):
+        self.teller = teller
+        self.transaction_ready = threading.Event()
+        self.teller_ready.set()
+
+    def give_transaction(self, teller):
+        self.transaction_ready.set()
+        return self.transaction_type
+
+    def finish_interaction(self, teller):
+        self.transaction_done.set()
+
 
 if __name__ == "__main__":
-    numCustomers = 10
+    numCustomers = 50
     numTellers = 3
 
     entry = threading.Semaphore(2)

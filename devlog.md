@@ -17,3 +17,6 @@ So far, I made an initial flow where there are three teller threads and ten cust
 
 12:34 AM 4/12/2025
 This past working session, I mainly focused on adjusting my code to have two classes, one for the customers and another for the tellers. This is because each one stores states so having them as classes instead of methods is easier. I didn't really encounter many problems this working session. Next session, I plan on going through the pdf more and seeing what else I need to add and just work through the project like normal.
+
+11:38 AM 4/12/2025
+I don't have any new thoughts that I haven't already written out in my previous session logs. This session, I plan to mainly finish up the teller classes along with maybe finishing up the customer class and further see how the flow is between the classes and such. That is what I plan on implementing in this session.

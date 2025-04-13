@@ -26,3 +26,6 @@ I was more productive this session. I was able to finish the teller class along 
 
 10:37 PM 4/12/2025
 From last session, I haven't had any new thoughts besides adjusting more of the outputs and such and make sure it flows properly. This session, I plan to do more testing and ensure my code outputs and runs properly and such. Beyond that, I do not have major confusions about the project because it is about the interaction between three threads for the tellers and 50 threads for the customers.
+
+11:55 PM 4/12/2025
+This session, I didn't really do much, I just reviewed my logic and made minor corrections to the output logic. Next session, I plan on testing on the cs1 server.

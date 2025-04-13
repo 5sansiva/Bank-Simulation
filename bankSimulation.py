@@ -5,11 +5,6 @@ import random
 import time
 from queue import Queue
 
-teller_semaphore = threading.Semaphore(3)
-teller_ready_barrier = threading.Barrier(3)
-
-waiting_customers = Queue()
-
 class Teller(threading.Thread):
     def __init__(self, id, safe, manager, customerQueue):
         super().__init__()
@@ -75,9 +70,11 @@ class Customer(threading.Thread):
         with self.entry_semaphore:  
             print(f"Customer {self.id} []: entering bank.")
             print(f"Customer {self.id} []: getting in line.")
+            
             self.customerQueue.put(self)
             self.teller_ready.wait()  
 
+            print(f"Customer {self.id} []: selecting a teller.")
             print(f"Customer {self.id} [Teller {self.teller.id}]: selects teller")
             print(f"Customer {self.id} [Teller {self.teller.id}] introduces itself")
 
@@ -105,7 +102,7 @@ class Customer(threading.Thread):
 
 
 if __name__ == "__main__":
-    numCustomers = 50
+    numCustomers = 10
     numTellers = 3
 
     entry = threading.Semaphore(2)

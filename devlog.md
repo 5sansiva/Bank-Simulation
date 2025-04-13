@@ -23,3 +23,6 @@ I don't have any new thoughts that I haven't already written out in my previous 
 
 1:39 PM 4/12/2025
 I was more productive this session. I was able to finish the teller class along with the customer class and adjust how the flow should be between the classes. I have to do some more testing to see if this is fine and I also have to test on the UTD servers to make sure this program runs on there. I did not encounter any major errors during this work session as the minute errors I had were more of how the teller messages were intertwined with the customer messages to start, like the customer enters before all three of the tellers were ready. I accomplished more this session because I initially only was going to finish the teller class but I ended up finishing both the teller and customer class for now. Next session is mainly testing, double checking with the pdf requirements and testing on the UTD servers.
+
+10:37 PM 4/12/2025
+From last session, I haven't had any new thoughts besides adjusting more of the outputs and such and make sure it flows properly. This session, I plan to do more testing and ensure my code outputs and runs properly and such. Beyond that, I do not have major confusions about the project because it is about the interaction between three threads for the tellers and 50 threads for the customers.

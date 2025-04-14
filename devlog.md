@@ -105,3 +105,5 @@ Customer 5 []: goes to door
 Customer 5 []: leaves the bank
 
 I need to go through and fix the main issue so the flow is right. I missed this before but when I used python3 bankSimulation.py | more, I was able to slowly go through my simulation in more detail.
+
+I found another issue that when the teller is occupied, such as talking to the manager and such, another customer is requesting that teller. I also have to address that issue as well.

@@ -26,6 +26,7 @@ class Teller(threading.Thread):
                 break
 
             customer.selects_teller(self)
+            customer.ready_for_transaction.wait()
 
             print(f"Teller {self.id} [Customer {customer.id}]: serving a customer")
             print(f"Teller {self.id} [Customer {customer.id}]: asks for transaction")
@@ -62,6 +63,7 @@ class Customer(threading.Thread):
         self.teller = None
         self.teller_ready = threading.Event()
         self.transaction_done = threading.Event()
+        self.ready_for_transaction = threading.Event()
 
     def run(self):
         print(f"Customer {self.id} []: wants to perform a {self.transaction_type.lower()} transaction")
@@ -79,6 +81,7 @@ class Customer(threading.Thread):
             print(f"Customer {self.id} [Teller {self.teller.id}]: selects teller")
             print(f"Customer {self.id} [Teller {self.teller.id}] introduces itself")
 
+            self.ready_for_transaction.set()
 
             self.transaction_ready.wait()
             print(f"Customer {self.id} [Teller {self.teller.id}]: asks for {self.transaction_type.lower()} transaction")
@@ -87,7 +90,6 @@ class Customer(threading.Thread):
             print(f"Customer {self.id} [Teller {self.teller.id}]: leaves teller")
             print(f"Customer {self.id} []: goes to door")
             print(f"Customer {self.id} []: leaves the bank")
-
 
     def selects_teller(self, teller):
         self.teller = teller
@@ -101,7 +103,6 @@ class Customer(threading.Thread):
     def finish_interaction(self, teller):
         self.transaction_done.set()
 
-
 if __name__ == "__main__":
     numCustomers = 50
     numTellers = 3
@@ -111,7 +112,6 @@ if __name__ == "__main__":
     manager = threading.Semaphore(1) #Semaphore to dictate entry to see the manager. Only one teller at a time
     teller_ready_barrier = threading.Barrier(numTellers)  #Makes sure that the teller threads wait until all of them are ready
     customerQueue = Queue()
-
 
     tellers = [Teller(i, safe, manager, customerQueue) for i in range(numTellers)]
     for t in tellers:

@@ -53,3 +53,6 @@ This was the code that I added to make sure that it doesn't go into an infinite 
 9:09
 I initially wrote on my code 'tellers_ready_barriers.wait()' and that caused an error when I ran it on the cs1 server as that was not how I wrote the teller wait thread. It should be teller_ready_barrier.wait() so I had to correct that.
 I ran my code initially on the cs1 server and my output seems to be good. I have to go through the output to ensure that it matches the example output that was present in elearning. I also need to make sure to write on my readme that the TA should run python3 and not python when testing my project.
+
+9:19
+I have a dinner break so I am gonna go eat. A small break

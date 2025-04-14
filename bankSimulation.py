@@ -16,6 +16,8 @@ class Teller(threading.Thread):
     def run(self):
         print(f"Teller {self.id} []: ready to serve")
 
+        teller_ready_barrier.wait()
+
         while True:
             print(f"Teller {self.id} []: waiting for a customer")
             customer = self.customerQueue.get()

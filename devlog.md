@@ -77,3 +77,6 @@ This does not match the format that was required in the pdf so I need to adjust 
 
 10:38 PM
 I found that I forgot the bank closes for the day in my output so I added that.
+
+10:52 PM
+I finished the readme. I talked about the different classes, how to run the program and an overview while also mentioning the constraints.

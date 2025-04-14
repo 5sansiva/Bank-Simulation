@@ -115,3 +115,9 @@ along with two events: 'transaction_ready' and 'transaction_complete'. Both of t
 So now a proper flow has been set. Customer enters queue → Gets assigned a teller → Selects and introduces themselves. Then Teller waits for introduction → Asks for transaction → Processes it. Then finally, Teller signals completion → Customer leaves → Teller becomes available.
 
 I added a busy event to make sure that the teller was marked as busy when they go to talk to the manager or go to the safe.
+
+11:38 PM
+I tested my code and it matches the sample output and also there aren't any other major issues so I am going to turn in the assignment now.
+
+11:39 4/13/2025
+This session went good. I encounted new problems with the output format being off along with some unexpected errors in how the tellers and the customers communicated with each other. This led to some weird behaviors such as the teller accepting a new customer when it was in the safe or the customer reintroducing themselves when they already were acclimated with the teller. These issues were present. I was able to fix these issues and now I am going to turn in the project.

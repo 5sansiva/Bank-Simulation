@@ -80,3 +80,28 @@ I found that I forgot the bank closes for the day in my output so I added that.
 
 10:52 PM
 I finished the readme. I talked about the different classes, how to run the program and an overview while also mentioning the constraints.
+
+11:01 PM
+I noticed an error in my code when I was evaluating it again. In one of the sample runs I performed, the interaction between teller 2 and customer 5 was weird as customer 5 asked for a withdraw and teller 2 went to the safe, but then it stated that customer 5 was waiting for a teller again and such.
+
+This was the example output I was getting and this output is wrong:
+Customer 5 []: getting in line.
+Teller 2 [Customer 5]: serving a customer
+Teller 2 [Customer 5]: asks for transaction
+Teller 2 [Customer 5]: handling deposit transaction
+Teller 2 [Customer 5]: going to safe
+Teller 2 [Customer 5]: enter safe
+...
+Customer 5 []: selecting a teller.
+Customer 5 [Teller 2]: selects teller
+Customer 5 [Teller 2] introduces itself
+Customer 5 [Teller 2]: asks for deposit transaction
+...
+Teller 2 [Customer 5]: leaving safe
+Teller 2 [Customer 5]: finishes deposit transaction.
+Teller 2 [Customer 5]: wait for customer to leave.
+Customer 5 [Teller 2]: leaves teller
+Customer 5 []: goes to door
+Customer 5 []: leaves the bank
+
+I need to go through and fix the main issue so the flow is right. I missed this before but when I used python3 bankSimulation.py | more, I was able to slowly go through my simulation in more detail.

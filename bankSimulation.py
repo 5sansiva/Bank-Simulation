@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import threading
 import random
 import time
@@ -12,11 +10,12 @@ class Teller(threading.Thread):
         self.safe = safe
         self.manager = manager
         self.customerQueue = customerQueue
+        self.busy = threading.Event()
 
     def run(self):
         print(f"Teller {self.id} []: ready to serve")
         print(f"Teller {self.id} []: waiting for a customer")
-        
+
         teller_ready_barrier.wait()
 
         while True:
@@ -25,12 +24,21 @@ class Teller(threading.Thread):
                 print(f"Teller {self.id} []: leaving for the day")
                 break
 
-            customer.selects_teller(self)
-            customer.ready_for_transaction.wait()
+            self.busy.set()  # Mark teller as busy
+            
+            # Notify customer about assigned teller
+            customer.set_teller(self)
+            
+            # Wait for customer to complete their introduction
+            customer.introduction_complete.wait()
 
+            # Now proceed with serving the customer
             print(f"Teller {self.id} [Customer {customer.id}]: serving a customer")
             print(f"Teller {self.id} [Customer {customer.id}]: asks for transaction")
-            transaction_type = customer.give_transaction(self)
+            
+            # Wait for customer to be ready to give transaction
+            customer.transaction_ready.wait()
+            transaction_type = customer.transaction_type
 
             print(f"Teller {self.id} [Customer {customer.id}]: handling {transaction_type.lower()} transaction")
 
@@ -51,66 +59,72 @@ class Teller(threading.Thread):
             self.safe.release()
 
             print(f"Teller {self.id} [Customer {customer.id}]: wait for customer to leave.")
-            customer.finish_interaction(self)
+            customer.transaction_complete.set()
+            customer.customer_left.wait()
+            
+            self.busy.clear()  # Mark teller as not busy
+            print(f"Teller {self.id} []: waiting for a customer")
 
 class Customer(threading.Thread):
-    def __init__(self, id, entry_semaphore, customerQueue):
+    def __init__(self, id, entry_semaphore, teller_queue):
         super().__init__()
         self.id = id
         self.entry_semaphore = entry_semaphore
-        self.customerQueue = customerQueue
+        self.teller_queue = teller_queue
         self.transaction_type = random.choice(["Deposit", "Withdrawal"])
         self.teller = None
-        self.teller_ready = threading.Event()
-        self.transaction_done = threading.Event()
-        self.ready_for_transaction = threading.Event()
+        self.teller_assigned = threading.Event()
+        self.introduction_complete = threading.Event()
+        self.transaction_ready = threading.Event()
+        self.transaction_complete = threading.Event()
+        self.customer_left = threading.Event()
 
     def run(self):
         print(f"Customer {self.id} []: wants to perform a {self.transaction_type.lower()} transaction")
-        time.sleep(random.uniform(0, 0.1))  
+        time.sleep(random.uniform(0, 0.1))
 
         print(f"Customer {self.id} []: going to bank.")
-        with self.entry_semaphore:  
+        with self.entry_semaphore:
             print(f"Customer {self.id} []: entering bank.")
             print(f"Customer {self.id} []: getting in line.")
-            
-            self.customerQueue.put(self)
-            self.teller_ready.wait()  
 
+            # Put customer in queue and wait to be assigned a teller
+            self.teller_queue.put(self)
+            self.teller_assigned.wait()
+
+            # Now the customer has been assigned a teller
             print(f"Customer {self.id} []: selecting a teller.")
             print(f"Customer {self.id} [Teller {self.teller.id}]: selects teller")
-            print(f"Customer {self.id} [Teller {self.teller.id}] introduces itself")
-
-            self.ready_for_transaction.set()
-
-            self.transaction_ready.wait()
-            print(f"Customer {self.id} [Teller {self.teller.id}]: asks for {self.transaction_type.lower()} transaction")
-
-            self.transaction_done.wait()
+            print(f"Customer {self.id} [Teller {self.teller.id}]: introduces itself")
+            
+            # Signal that introduction is complete
+            self.introduction_complete.set()
+            
+            # Signal ready to give transaction
+            self.transaction_ready.set()
+            
+            # Wait for transaction to complete
+            self.transaction_complete.wait()
+            
             print(f"Customer {self.id} [Teller {self.teller.id}]: leaves teller")
             print(f"Customer {self.id} []: goes to door")
             print(f"Customer {self.id} []: leaves the bank")
+            
+            # Signal that customer has left
+            self.customer_left.set()
 
-    def selects_teller(self, teller):
+    def set_teller(self, teller):
         self.teller = teller
-        self.transaction_ready = threading.Event()
-        self.teller_ready.set()
-
-    def give_transaction(self, teller):
-        self.transaction_ready.set()
-        return self.transaction_type
-
-    def finish_interaction(self, teller):
-        self.transaction_done.set()
+        self.teller_assigned.set()
 
 if __name__ == "__main__":
     numCustomers = 50
     numTellers = 3
 
-    entry = threading.Semaphore(2) #Semaphore to dictate entry 
-    safe = threading.Semaphore(2) #Semaphore to dictate how many tellers can be inside the safe at once. 
-    manager = threading.Semaphore(1) #Semaphore to dictate entry to see the manager. Only one teller at a time
-    teller_ready_barrier = threading.Barrier(numTellers)  #Makes sure that the teller threads wait until all of them are ready
+    entry = threading.Semaphore(2)  # Only 2 customers can enter at once
+    safe = threading.Semaphore(2)   # Safe can handle 2 tellers at once
+    manager = threading.Semaphore(1)  # Only 1 teller can talk to manager at once
+    teller_ready_barrier = threading.Barrier(numTellers)
     customerQueue = Queue()
 
     tellers = [Teller(i, safe, manager, customerQueue) for i in range(numTellers)]
@@ -120,7 +134,7 @@ if __name__ == "__main__":
     customers = [Customer(i, entry, customerQueue) for i in range(numCustomers)]
     for c in customers:
         c.start()
-    
+
     for c in customers:
         c.join()
     for _ in range(numTellers):

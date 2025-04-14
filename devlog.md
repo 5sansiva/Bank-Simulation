@@ -107,3 +107,11 @@ Customer 5 []: leaves the bank
 I need to go through and fix the main issue so the flow is right. I missed this before but when I used python3 bankSimulation.py | more, I was able to slowly go through my simulation in more detail.
 
 I found another issue that when the teller is occupied, such as talking to the manager and such, another customer is requesting that teller. I also have to address that issue as well.
+
+11:30
+So after debugging, I found that there were some synchronization problems between the threads, mainly that the originally, the tellers could start serving the customers before the customers were ready with their selection. To combat this, I added some more threading events to ensure that the teller waits for the customer with the event 'introduction_complete'
+along with two events: 'transaction_ready' and 'transaction_complete'. Both of tehse help to add time between the teller processing the transaction and then waiting before he can take the next customer.
+
+So now a proper flow has been set. Customer enters queue → Gets assigned a teller → Selects and introduces themselves. Then Teller waits for introduction → Asks for transaction → Processes it. Then finally, Teller signals completion → Customer leaves → Teller becomes available.
+
+I added a busy event to make sure that the teller was marked as busy when they go to talk to the manager or go to the safe.

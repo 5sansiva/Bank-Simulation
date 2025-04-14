@@ -15,14 +15,14 @@ class Teller(threading.Thread):
 
     def run(self):
         print(f"Teller {self.id} []: ready to serve")
-
+        print(f"Teller {self.id} []: waiting for a customer")
+        
         teller_ready_barrier.wait()
 
         while True:
-            print(f"Teller {self.id} []: waiting for a customer")
+            
             customer = self.customerQueue.get()
             if customer is None:
-
                 print(f"Teller {self.id} []: leaving for the day")
                 break
 
@@ -107,10 +107,10 @@ if __name__ == "__main__":
     numCustomers = 50
     numTellers = 3
 
-    entry = threading.Semaphore(2)
-    safe = threading.Semaphore(2)
-    manager = threading.Semaphore(1)
-    teller_ready_barrier = threading.Barrier(numTellers)
+    entry = threading.Semaphore(2) #Semaphore to dictate entry 
+    safe = threading.Semaphore(2) #Semaphore to dictate how many tellers can be inside the safe at once. 
+    manager = threading.Semaphore(1) #Semaphore to dictate entry to see the manager. Only one teller at a time
+    teller_ready_barrier = threading.Barrier(numTellers)  #Makes sure that the teller threads wait until all of them are ready
     customerQueue = Queue()
 
 

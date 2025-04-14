@@ -27,32 +27,50 @@ I was more productive this session. I was able to finish the teller class along 
 10:37 PM 4/12/2025
 From last session, I haven't had any new thoughts besides adjusting more of the outputs and such and make sure it flows properly. This session, I plan to do more testing and ensure my code outputs and runs properly and such. Beyond that, I do not have major confusions about the project because it is about the interaction between three threads for the tellers and 50 threads for the customers.
 
+Session Notes:
+This includes some information which I remember but forgot to log down
+
+During this session, the output was in a weird format as the line "customer selects a teller" were forgotten so I made sure to go through my output and add those to make sure that my output matches the output that is present in the sample.
+
 11:55 PM 4/12/2025
 This session, I didn't really do much, I just reviewed my logic and made minor corrections to the output logic. Next session, I plan on testing on the cs1 server.
 
 7:41 PM 4/13/2025
 I am going to finish working on the project during this session. I have already established the teller and customer classes so I will be testing on the cs1 server. Last project, I encountered issues on the server due to different versions of python so this time, I hope to ensure that those errors will not arise. I will do testing and ensure everything works smoothly, then I will upload to the server. I will document any errors that I have during my session.
 
-7:47
+7:47 PM
 Minor session break, I have to call someone as I was a meeting.
 
-8:23
-
+8:23 PM
 Had to resubmit another assignment. I also had a call so I finished that. Now I am back to working.
 
-8:34
+8:34 PM
 I noticed that my code doesn't restrict customers before all the tellers are ready so I have to add a .wait() in the Teller class. This is so that no customer can enter the bank unless all the tellers are available.
 
-8:41
+8:41 PM
 I forgot to log that I had an error on my program initially, where my code didn't stop properly as the threads were just running and even after the output message, the code was running which made me have to manually stop the code. This wasn't from this work session but it was from 3 sessions ago I think. I thought it would be important to log it down.  
 for \_ in range(numTellers):
 customerQueue.put(None)
 
 This was the code that I added to make sure that it doesn't go into an infinite loop. This essentially goes through the customerQueue and adds None so that when the teller comes across it, the teller would then leave. This helps to terminate the thread as well.
 
-9:09
+9:09 PM
 I initially wrote on my code 'tellers_ready_barriers.wait()' and that caused an error when I ran it on the cs1 server as that was not how I wrote the teller wait thread. It should be teller_ready_barrier.wait() so I had to correct that.
 I ran my code initially on the cs1 server and my output seems to be good. I have to go through the output to ensure that it matches the example output that was present in elearning. I also need to make sure to write on my readme that the TA should run python3 and not python when testing my project.
 
-9:19
+9:19 PM
 I have a dinner break so I am gonna go eat. A small break
+
+9:46 PM
+I have had my dinner and now I am back to going through and double checking everything.
+
+10:12 PM
+I ran on the cs1 servers and called it using python3 and it works so that is good. I did notice an error in my output format as my output was in this format ->
+Teller 0 []: ready to serve
+Teller 1 []: ready to serve
+Teller 2 []: ready to serve
+Teller 2 []: waiting for a customer
+Teller 0 []: waiting for a customer
+Teller 1 []: waiting for a customer
+
+This does not match the format that was required in the pdf so I need to adjust the print statements so that immediately after the 'ready to serve is printed', the line 'waiting for a customer' should also be printed.

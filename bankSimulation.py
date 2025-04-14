@@ -20,7 +20,6 @@ class Teller(threading.Thread):
         teller_ready_barrier.wait()
 
         while True:
-            
             customer = self.customerQueue.get()
             if customer is None:
                 print(f"Teller {self.id} []: leaving for the day")
@@ -128,3 +127,5 @@ if __name__ == "__main__":
         customerQueue.put(None)
     for t in tellers:
         t.join()
+
+    print("The bank closes for the day")

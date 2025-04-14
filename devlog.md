@@ -74,3 +74,6 @@ Teller 0 []: waiting for a customer
 Teller 1 []: waiting for a customer
 
 This does not match the format that was required in the pdf so I need to adjust the print statements so that immediately after the 'ready to serve is printed', the line 'waiting for a customer' should also be printed.
+
+10:38 PM
+I found that I forgot the bank closes for the day in my output so I added that.

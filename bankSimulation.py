@@ -102,7 +102,7 @@ class Customer(threading.Thread):
 
 
 if __name__ == "__main__":
-    numCustomers = 10
+    numCustomers = 50
     numTellers = 3
 
     entry = threading.Semaphore(2)

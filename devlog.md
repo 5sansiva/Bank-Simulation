@@ -29,3 +29,6 @@ From last session, I haven't had any new thoughts besides adjusting more of the 
 
 11:55 PM 4/12/2025
 This session, I didn't really do much, I just reviewed my logic and made minor corrections to the output logic. Next session, I plan on testing on the cs1 server.
+
+7:41PM 4/13/2025
+I am going to finish working on the project during this session. I have already established the teller and customer classes so I will be testing on the cs1 server. Last project, I encountered issues on the server due to different versions of python so this time, I hope to ensure that those errors will not arise. I will do testing and ensure everything works smoothly, then I will upload to the server. I will document any errors that I have during my session.

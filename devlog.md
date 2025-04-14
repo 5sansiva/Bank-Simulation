@@ -32,3 +32,15 @@ This session, I didn't really do much, I just reviewed my logic and made minor c
 
 7:41PM 4/13/2025
 I am going to finish working on the project during this session. I have already established the teller and customer classes so I will be testing on the cs1 server. Last project, I encountered issues on the server due to different versions of python so this time, I hope to ensure that those errors will not arise. I will do testing and ensure everything works smoothly, then I will upload to the server. I will document any errors that I have during my session.
+
+7:47 Minor session break, I have to call someone as I was a meeting.
+
+8:23 Had to resubmit another assignment. I also had a call so I finished that. Now I am back to working.
+
+8:34 I noticed that my code doesn't restrict customers before all the tellers are ready so I have to add a .wait() in the Teller class. This is so that no customer can enter the bank unless all the tellers are available.
+
+8:41 I forgot to log that I had an error on my program initially, where my code didn't stop properly as the threads were just running and even after the output message, the code was running which made me have to manually stop the code. This wasn't from this work session but it was from 3 sessions ago I think. I thought it would be important to log it down.  
+for \_ in range(numTellers):
+customerQueue.put(None)
+
+This was the code that I added to make sure that it doesn't go into an infinite loop. This essentially goes through the customerQueue and adds None so that when the teller comes across it, the teller would then leave. This helps to terminate the thread as well.

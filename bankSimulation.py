@@ -24,19 +24,18 @@ class Teller(threading.Thread):
                 print(f"Teller {self.id} []: leaving for the day")
                 break
 
-            self.busy.set()  # Mark teller as busy
+            self.busy.set()  
             
-            # Notify customer about assigned teller
+
             customer.set_teller(self)
             
-            # Wait for customer to complete their introduction
+
             customer.introduction_complete.wait()
 
-            # Now proceed with serving the customer
+
             print(f"Teller {self.id} [Customer {customer.id}]: serving a customer")
             print(f"Teller {self.id} [Customer {customer.id}]: asks for transaction")
-            
-            # Wait for customer to be ready to give transaction
+
             customer.transaction_ready.wait()
             transaction_type = customer.transaction_type
 
@@ -88,11 +87,11 @@ class Customer(threading.Thread):
             print(f"Customer {self.id} []: entering bank.")
             print(f"Customer {self.id} []: getting in line.")
 
-            # Put customer in queue and wait to be assigned a teller
+
             self.teller_queue.put(self)
             self.teller_assigned.wait()
 
-            # Now the customer has been assigned a teller
+
             print(f"Customer {self.id} []: selecting a teller.")
             print(f"Customer {self.id} [Teller {self.teller.id}]: selects teller")
             print(f"Customer {self.id} [Teller {self.teller.id}]: introduces itself")
